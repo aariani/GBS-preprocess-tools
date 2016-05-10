@@ -1,0 +1,5 @@
+Prepare a main file,
+
+Use a --gz option
+
+parse all the option and then based on gz option use different pipelines based on gz or no
