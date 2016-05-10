@@ -18,5 +18,5 @@ Barcode file specification
 If you are using windows or MAC please refer to the main.py script in the source file for running the program
 From the command line type:
 
-	blablabla
+	python main.py -h
 
