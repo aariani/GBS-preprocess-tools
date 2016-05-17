@@ -7,8 +7,8 @@ from __future__ import print_function
 import gzip
 import os
 import argparse
-import BCTool
-import trimQC
+import BCtool
+import process_read
 from commands import getoutput
 
 parser=argparse.ArgumentParser(prog='GBS_preprocess_tool', description='Program for preprocessing GBS reads')
@@ -19,9 +19,9 @@ parser.add_argument('-s', '--restriction_enzyme_site', dest='REsites', help='The
 parser.add_argument('-SR', '--site-remnant', dest='RErem', help='The RE remnant site after the digestion, only the reads having the remnant site after the barcode will be kept. For RE with ambiguous nucleotide you should write all the possible remnant sites separated by a comma (as in the -s parameter)')
 parser.add_argument('-l', '--min-length', dest='minlen', type=int, default=30, help='Minimum length of reads after quality trimming and adapter removal (default: 30bp)')
 parser.add_argument('-q', '--min-qual', dest='minQ',type=int, default=20, help='Mean minimum quality (in a sliding window of 5bp) for trimming reads, assumed Sanger quality (Illumina 1.8+, default: 20)')
-parser.add_argument('-gz', '--binary-output', dest='gz', action='store_true', default=False, help='Do you want to output the fastq file in a compressed format (i.e. gzip compressed)? This option save disk space, but writing of binary files require a considerable higher amount of time')
+parser.add_argument('-gz', '--binary-output', dest='gz', action='store_true', default=False, help='Do you want to output the fastq file in a compressed format (i.e. gzip compressed)? This option save disk space, but writing of binary files require a considerable higher amount of time (Default: False)')
 parser.add_argument('-ad', '--adapter-contaminants', dest='contaminant', default='AGATCGG', help='The initial sequence of the adapter contaminant (default: AGATCGG)')
-#parser.add_argument('--keep-remnant-site', dest='KeepRErem', action='store_true', default=False, help='Do you want to keep the remnant site from the cleaned read? (default: False)')
+parser.add_argument('--remove-remnant-site', dest='rmRErem', action='store_true', default=False, help='Do you want to remove the RE remnant site from the cleaned reads? (default: False)')
 
 args=parser.parse_args()
 
@@ -32,20 +32,20 @@ if 'None' in str(args):
 ## Assigning paramters to variables
 reads=args.reads.split('/')[0]
 clean_reads=args.clean_reads
-bc=args.bc
+bc=args.bc_file
 REsite=args.REsites.split(',')  ## This will be a list
-rem_sites=args.RErem.split(',') ## And this too. Remember for the final filtering
+rem_site=args.RErem.split(',') ## And this too. Remember for the final filtering
 minlen=args.minlen
 minQ=args.minQ
 gz=args.gz
 contaminant=args.contaminant
-
+rmRErem=args.rmRErem
 
 ### Get barcode info and open all the file
-barcode_d,l,demInfo=demultiplex.getBCInfo(bc, gz)
+barcode_d,l,demInfo=BCtool.getBCInfo(bc, gz)
 
 ### Start preprocess the files
-all_reads=getoutput('ls %s/*.gz' % reads)
+all_reads=getoutput('ls %s/*.gz' % reads).split()
 for i in all_reads:
 	print('Start preprocessing %s file' % i)
 	read_f=gzip.open(i, 'rb')
@@ -56,12 +56,24 @@ for i in all_reads:
 		plus=read_f.readline()
 		quality=read_f.readline()
 		if '1:Y:0' not in name:  ## keep only reads passing initial Illumina filtering
-			index,sequence,quality=BCtool.getBCindex(name,sequence,plus,quality,barcode_d,l) ## demultipleplex sequences and return BC Index, sequence and qual string without the barcode sequence
-			if len(index)> 0: ## Successfully demultiplexed return the BC sequence, otherwise return ''
-				
-				
+			index,sequence,quality=BCtool.getBCindex(name,sequence,quality,barcode_d,l)			
+			if index:
+				sequence, quality= process_read.process(sequence, quality, REsite, contaminant, minQ, minlen, rem_site, rmRErem)
+				if sequence:
+					if gz:
+						a=gzip.open(barcode_d[index], 'ab')
+						a.write(name+sequence+plus+quality)
+						a.close()
+					else:
+						a=open(barcode_d[index], 'a')
+						a.write(name+sequence+plus+quality)
+						a.close()
+					demInfo[barcode_d[index]]+=1
+	read_f.close()
 
+os.system('mkdir %s' % clean_reads)
+os.system('mv *fq* %s' % clean_reads)
 
-
-
-
+print('Sample\tTotalReads', file=open('Demultiplexing_stats.txt', 'a'))
+for i in demInfo.keys():
+	print(i, demInfo[i], sep='\t', file=open('Demultiplexing_stats.txt', 'a'))
