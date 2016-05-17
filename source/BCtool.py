@@ -30,11 +30,11 @@ def getBCindex(name,sequence,quality,barcode_d,l):
 		a=gzip.open('unmatched.fq.gz', 'ab')
 		a.write(name+sequence+'+\n'+quality)
 		a.close()
-		index=False  ## index is not defined previously, so it will be just none, without any name associated
+		return False,False,False  ## index is not defined previously, so it will be just none, without any name associated
 	else:
 		index=index[0]
 		sequence=sequence[len(index):]
 		quality=quality[len(index):]
-	return index,sequence,quality
+		return index,sequence,quality
 
 

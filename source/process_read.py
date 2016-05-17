@@ -14,3 +14,7 @@ def process(sequence, quality, REsite, contaminant, minQ, minlen, rem_site, rmRE
 		## Check overhang site
 		if sequence:
 			return sequence, quality
+		else:
+			return False,False
+	else:
+		return False,False

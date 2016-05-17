@@ -7,10 +7,11 @@ def clip_chimera_and_adapters(sequence, quality, REsite, adapter):
 ### and the adapter sequence.
 ### It will also do a sliding window analysis for filtering the sequences
 	RE=[i in sequence for i in REsite]
-#	print(RE, REsite)
+	print(RE, REsite)
 #	print(sequence)
 	if True in RE:
-		pos=[sequence.find(i) for i in REsite] ### Index RE site
+		pos=[sequence.find(i) for i in REsite] ### Index RE site ## use find cause index raise an error in case 1 site is ok and the other not.
+		pos=[i for i in pos if i > 0] ### In case it did not find any modification in one of the sites it will raise a -1
 		firstpos=min(pos) ## first occurrence
 		sequence=sequence[:firstpos]+'\n'
  		quality=quality[:firstpos] +'\n'
@@ -33,7 +34,10 @@ def trim_qual(sequence, quality, minQ, minlen):
                         break
 	if len(sequence.strip()) >=minlen:
 		return sequence,quality
+	else:
+		return False,False
 
+###################
 def check_overhang(sequence, quality, rem_sites, rmRErem):
 #### script for checking the overhang sequences
 	overhangLength=len(rem_sites[0])
@@ -42,4 +46,6 @@ def check_overhang(sequence, quality, rem_sites, rmRErem):
 			sequence=sequence[overhangLength:]
 			quality=quality[overhangLength:]
 		return sequence, quality
+	else:
+		return False,False
 
