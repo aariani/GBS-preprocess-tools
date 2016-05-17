@@ -17,7 +17,7 @@ If the binary code is not working on your system you can compile a personal bina
 
 Please refer to the [Program Manual] (http://pythonhosted.org/PyInstaller/) for further informations.
 
-Another option could be to [run from the source code] (## Run the source code)
+Another option could be to [run from the source code] (##Run-the-source-code)
  
 
 ## Download the program
