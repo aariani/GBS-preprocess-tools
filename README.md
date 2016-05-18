@@ -12,7 +12,7 @@ The `GBSpep` program preprocess GBS reads in 4 consecutive steps:
 
 1. **Demultiplexing and barcodes removal**: The demultiplexing step identify exact barcode match in the sequence and remove the barcode;
 
-2. **Clip chimeras and adapters**: This second steps clip reads presenting the Restriction Enzyme (RE) site(s) (i.e. possible chimeras, partial digestion or sequencing errors) or the common adapterinitial sequence;
+2. **Clip chimeras and adapters**: This second steps clip reads presenting the Restriction Enzyme (RE) site(s) (i.e. possible chimeras, partial digestion or sequencing errors) or the common adapter initial sequence;
 
 3. **Quality trimming**: This step trim the reads based on a 5bp sliding window analysis, averaging the quality over the sliding window. When the average quality drop below a specified cut-off the reads are trimmed;
 
