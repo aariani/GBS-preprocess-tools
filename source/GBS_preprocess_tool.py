@@ -11,17 +11,17 @@ import BCtool
 import process_read
 from commands import getoutput
 
-parser=argparse.ArgumentParser(prog='GBS_preprocess_tool', description='Program for preprocessing GBS reads')
-parser.add_argument('-i', '--input-folder', dest='reads', help='The folder with your raw reads in fq.gz format')
-parser.add_argument('-o', '--output-folder', dest='clean_reads', help='The output folder for the final cleaned reads')
-parser.add_argument('-bc', '--barcode-file', dest='bc_file', help='The barcode file for your raw reads')
-parser.add_argument('-s', '--restriction_enzyme_site', dest='REsites', help='The Restriction Enzyme (RE) recognition site. If your RE has  ambiguous nucleotide you should write all the possible sites separated by a comma (ex. For ApeKI you should use -s GCAGC,GCTGC)')
-parser.add_argument('-SR', '--site-remnant', dest='RErem', help='The RE remnant site after the digestion, only the reads having the remnant site after the barcode will be kept. For RE with ambiguous nucleotide you should write all the possible remnant sites separated by a comma (as in the -s parameter)')
-parser.add_argument('-l', '--min-length', dest='minlen', type=int, default=30, help='Minimum length of reads after quality trimming and adapter removal (default: 30bp)')
+parser=argparse.ArgumentParser(prog='GBSprep', description='Program for preprocessing GBS reads')
+parser.add_argument('-i', '--input-folder', dest='reads', help='The folder with your raw reads in gz compressed format (REQUIRED)')
+parser.add_argument('-o', '--output-folder', dest='clean_reads', help='The output folder for the final cleaned and demultiplexed reads (REQUIRED)')
+parser.add_argument('-bc', '--barcode-file', dest='bc_file', help='The barcode file for your raw reads (REQUIRED)')
+parser.add_argument('-s', '--restriction_enzyme_site', dest='REsites', help='The Restriction Enzyme (RE) recognition site (REQUIRED). If your RE has ambiguous nucleotide you should write all the possible sites separated by a comma (ex. For ApeKI you should use -s GCAGC,GCTGC)')
+parser.add_argument('-SR', '--site-remnant', dest='RErem', help='The RE remnant site after the digestion (REQUIRED). Only reads with the remnant site after the barcode will be kept. For RE with ambiguous nucleotide you should write all the possible remnant sites separated by a comma (as in the -s parameter)')
+parser.add_argument('-l', '--min-length', dest='minlen', type=int, default=30, help='Minimum length of reads after quality trimming and adapter/chimeras clipping (default: 30bp)')
 parser.add_argument('-q', '--min-qual', dest='minQ',type=int, default=20, help='Mean minimum quality (in a sliding window of 5bp) for trimming reads, assumed Sanger quality (Illumina 1.8+, default: 20)')
-parser.add_argument('-gz', '--binary-output', dest='gz', action='store_true', default=False, help='Do you want to output the fastq file in a compressed format (i.e. gzip compressed)? This option save disk space, but writing of binary files require a considerable higher amount of time (Default: False)')
+parser.add_argument('-gz', '--binary-output', dest='gz', action='store_true', default=False, help='Do you want to output the fastq file in a compressed format (i.e. gz compressed)? This option save disk space, but writing binary files requires a considerable higher amount of time (Default: False)')
 parser.add_argument('-ad', '--adapter-contaminants', dest='contaminant', default='AGATCGG', help='The initial sequence of the adapter contaminant (default: AGATCGG)')
-parser.add_argument('--remove-remnant-site', dest='rmRErem', action='store_true', default=False, help='Do you want to remove the RE remnant site from the cleaned reads? (default: False)')
+parser.add_argument('--remove-remnant-site', dest='rmRErem', action='store_true', default=False, help='Do you want to remove the RE remnant site from the final cleaned reads? (default: False)')
 
 args=parser.parse_args()
 
