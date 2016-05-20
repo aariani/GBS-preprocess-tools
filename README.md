@@ -21,6 +21,8 @@ The `GBSpep` program preprocess GBS reads in 4 consecutive steps:
 
 Only the reads that pass all the 4 steps will be kept for further analysis.
 
+This program is able to preprocess multiple files at once. Just be sure that samples have the same barcode in all the sequencing runs. In case of replicated samples (i.e. the same genotype with different barcodes) they will be merged in a single file.
+
 ==================================================================================
 
 ## Download this repo
@@ -38,26 +40,84 @@ Let us assume you want to clone this repo into a directory named `proj`, you wil
 
 The binary code was created from the `GBS_preprocess_tool.py` script in the `source` folder using [PyInstaller] (http://www.pyinstaller.org/) v3.0 program on Ubuntu 14.04.4 Trusty.
 
+For running the binary code from the command line type:
+
+	./GBSprep -h
+	usage: GBSprep [-h] [-i READS] [-o CLEAN_READS] [-bc BC_FILE] [-s RESITES]
+               [-SR REREM] [-l MINLEN] [-q MINQ] [-gz] [-ad CONTAMINANT]
+               [--remove-remnant-site]
+
+	Program for preprocessing GBS reads
+	
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  -i READS, --input-folder READS
+	                        The folder with your raw reads in gz compressed format
+	                        (REQUIRED)
+	  -o CLEAN_READS, --output-folder CLEAN_READS
+	                        The output folder for the final cleaned and
+	                        demultiplexed reads (REQUIRED)
+	  -bc BC_FILE, --barcode-file BC_FILE
+	                        The barcode file for your raw reads (REQUIRED)
+	  -s RESITES, --restriction_enzyme_site RESITES
+	                        The Restriction Enzyme (RE) recognition site
+	                        (REQUIRED). If your RE has ambiguous nucleotide you
+	                        should write all the possible sites separated by a
+	                        comma (ex. For ApeKI you should use -s GCAGC,GCTGC)
+	  -SR REREM, --site-remnant REREM
+	                        The RE remnant site after the digestion (REQUIRED).
+	                        Only reads with the remnant site after the barcode
+	                        will be kept. For RE with ambiguous nucleotide you
+	                        should write all the possible remnant sites separated
+	                        by a comma (as in the -s parameter)
+	  -l MINLEN, --min-length MINLEN
+	                        Minimum length of reads after quality trimming and
+	                        adapter/chimeras clipping (default: 30bp)
+	  -q MINQ, --min-qual MINQ
+	                        Mean minimum quality (in a sliding window of 5bp) for
+	                        trimming reads, assumed Sanger quality (Illumina 1.8+,
+	                        default: 20)
+	  -gz, --binary-output  Do you want to output the fastq file in a compressed
+	                        format (i.e. gz compressed)? This option save disk
+	                        space, but writing binary files requires a
+	                        considerable higher amount of time (Default: False)
+	  -ad CONTAMINANT, --adapter-contaminants CONTAMINANT
+	                        The initial sequence of the adapter contaminant
+	                        (default: AGATCGG)
+	  --remove-remnant-site
+	                        Do you want to remove the RE remnant site from the
+	                        final cleaned reads? (default: False)
 
 
 See the [barcode section] (#barcode-file-specifications) for the format of the barcode file
 
-If the binary code is not working on your system you can compile a personal binary code in you PC using [PyInstaller] (http://www.pyinstaller.org/). 
+If the binary code is not working on your system you can compile a personal binary code in you PC using [PyInstaller] (http://www.pyinstaller.org/) and the `GBS_preprocess_tool.py` script. 
 
 Please refer to the [Program Manual] (http://pythonhosted.org/PyInstaller/) for further informations.
 
-Another option could be to [run from the source code] (#run-the-source-code)
+Another option could be to [run the source code] (#run-the-source-code)
 
 ==================================================================================
 
 ## Run the source code
 
-If you are using windows or MAC please refer to the main.py script in the source file for running the program
+If you are using Windows or MAC (and the binary code is not working) please refer to the `GBSprep.py` script for running this program.
+
+On Windows you will probably nee to install [Cygwin] (https://www.cygwin.com/) (not tested!).
+
+The `GBSprep.py` script contains all the codes in the `source` folder in a single file.
+
 From the command line type:
 
-	python main.py -h
+	python GBSprep.py -h
 
+
+The option of the script will be exactly the same as in the [run the binary code] (#run-the-binary-code) section
 
 ==================================================================================
 
 ## Barcode file specifications
+
+
+
+
