@@ -40,7 +40,32 @@ Let us assume you want to clone this repo into a directory named `proj`, you wil
 
 The binary code was created from the `GBS_preprocess_tool.py` script in the `source` folder using [PyInstaller] (http://www.pyinstaller.org/) v3.0 program on Ubuntu 14.04.4 Trusty.
 
-For running the binary code from the command line type:
+###Prepare the environment
+
+1. Create a directory for you project
+
+	mkdir myGBSproject
+
+2. Copy the `GBSprep` script to you project directory. If you have saved the script in the GBS-preprocess-tool folder type:
+
+	cp GBS-preprocess-tool/GBSprep myGBSproject
+
+3. Create a raw reads folder and copy your FASTQ files there (**Important**: this script works only with gz formatted fastq files)
+ 
+	mkdir myGBSproject/fastq
+	cp myfastqfolder/myfastqfiles.fastq.gz myGBSproject/fastq
+
+
+Run the script inside the `myGBSproject` folder (Example with CviAII enzyme)
+
+	cd myGBSproject
+	./GBSprep -i fastq -o demultiplexed -bc myBarcodefile.txt -s CATG -SR ATG
+
+The script will output the demultiplexed cleaned reads in fq format ready for downstream analysis.
+
+In addition the script will output a `Demultiplexing_stats.txt` file with informations about the total number of reads after filtering for each genotype.
+
+For all the option of the code from the command line type:
 
 	./GBSprep -h
 	usage: GBSprep [-h] [-i READS] [-o CLEAN_READS] [-bc BC_FILE] [-s RESITES]
@@ -89,6 +114,7 @@ For running the binary code from the command line type:
 	                        final cleaned reads? (default: False)
 
 
+
 See the [barcode section] (#barcode-file-specifications) for the format of the barcode file
 
 If the binary code is not working on your system you can compile a personal binary code in you PC using [PyInstaller] (http://www.pyinstaller.org/) and the `GBS_preprocess_tool.py` script. 
@@ -112,12 +138,16 @@ From the command line type:
 	python GBSprep.py -h
 
 
-The option of the script will be exactly the same as in the [run the binary code] (#run-the-binary-code) section
+The option of the script and the preparation of the environment will be exactly the same as in the [run the binary code] (#run-the-binary-code) section
 
 ==================================================================================
 
 ## Barcode file specifications
 
+The barcode files if formed by two columns, separated by a space, with the barcode sequence and the name of the genotypes
 
+	barcode1 genotype1
+	barcode2 genotype2
+	barcode3 genotype3
 
 

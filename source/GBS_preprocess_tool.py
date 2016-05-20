@@ -76,4 +76,4 @@ os.system('mv *fq* %s' % clean_reads)
 
 print('Sample\tTotalReads', file=open('Demultiplexing_stats.txt', 'a'))
 for i in demInfo.keys():
-	print(i, demInfo[i], sep='\t', file=open('Demultiplexing_stats.txt', 'a'))
+	print(i.split('.')[0], demInfo[i], sep='\t', file=open('Demultiplexing_stats.txt', 'a'))
