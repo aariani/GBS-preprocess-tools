@@ -1,4 +1,4 @@
-# GBS preprocess tool
+# GBSprep
 
 ## Tool for preprocessing Illumina reads generated from GBS library protocol
 
@@ -130,7 +130,7 @@ Another option could be to [run the source code] (#run-the-source-code)
 
 If you are using Windows or MAC (and the binary code is not working) please refer to the `GBSprep.py` script for running this program.
 
-On Windows you will probably nee to install [Cygwin] (https://www.cygwin.com/) (not tested!).
+On Windows you will probably need to install [Cygwin] (https://www.cygwin.com/) (not tested!).
 
 The `GBSprep.py` script contains all the codes in the `source` folder in a single file.
 
