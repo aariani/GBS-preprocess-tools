@@ -50,7 +50,7 @@ def clip_chimera_and_adapters(sequence, quality, REsite, adapter):
 	RE=[i in sequence for i in REsite]
 	if True in RE:
 		pos=[sequence.find(i) for i in REsite] ### Index RE site ## use find cause index raise an error in case 1 site is ok and the other not.
-		pos=[i for i in pos if i > 0] ### In case it did not find any modification in one of the sites it will raise a -1
+		pos=[i for i in pos if i >= 0] ### In case it did not find any modification in one of the sites it will raise a -1
 		firstpos=min(pos) ## first occurrence
 		sequence=sequence[:firstpos]+'\n'
  		quality=quality[:firstpos] +'\n'
