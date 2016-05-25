@@ -1,4 +1,4 @@
-# GBSprep
+# GBSprep: a flexible all-in-one tool for pre-processing Genotyping-by-Sequencing (GBS) Illumina reads
 
 ## Tool for preprocessing Illumina reads generated from GBS library protocol
 
@@ -33,13 +33,13 @@ Let's assume you want to clone this repo into a directory named `proj`, you will
 
     mkdir proj
     cd proj
-    git clone https://github.com/aariani/GBS-preprocess-tools
+    git clone https://github.com/aariani/GBSprep
 
 ==================================================================================
 
 ## Run the binary code
 
-The binary code was created from the `GBS_preprocess_tool.py` script in the `source` folder using [PyInstaller] (http://www.pyinstaller.org/) v3.0 program on Ubuntu 14.04.4 Trusty.
+The binary code was created from the `GBSprep_main.py` script in the `source` folder using [PyInstaller] (http://www.pyinstaller.org/) v3.0 program on Ubuntu 14.04.4 Trusty.
 
 ###Prepare the environment
 
@@ -47,9 +47,9 @@ The binary code was created from the `GBS_preprocess_tool.py` script in the `sou
 
 		mkdir myGBSproject
 
-2. Copy the `GBSprep` script to you project directory. If you have saved the script in the `proj/GBS-preprocess-tool` folder type:
+2. Copy the `GBSprep` script to you project directory. If you have saved the script in the `proj/GBSprep` folder type:
 
-		cp proj/GBS-preprocess-tool/GBSprep myGBSproject
+		cp proj/GBSprep/GBSprep myGBSproject
 
 3. Create a raw reads folder and copy your FASTQ files there (**Important**: this script works only with gz formatted fastq files)
  

@@ -1,6 +1,6 @@
 # This folder contains the source files of the GBSprep program
 
-This files could be used for creating a binary code from the `GBS_preprocess_tool.py` for your computer.
+This files could be used for creating a binary code from the `GBSprep_main.py` for your computer.
 
 In this folder there are all the modules of the GBSprep program in the main folder.
 
@@ -10,7 +10,7 @@ The GBSprep.py file were created by concatenating the files in this folder (with
 
 File list in this folder:
 
-* `GBS_preprocess_tool.py` is the main script that parses the command line parameters and call all the other modules in this folder;
+* `GBSprep_main.py` is the main script that parses the command line parameters and call all the other modules in this folder;
 
 * `BCtool.py` contains functions for parsing barcodes and genotypes and for demultiplexing reads;
 
