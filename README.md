@@ -1,4 +1,4 @@
-# GBSprep: a flexible all-in-one tool for pre-processing Genotyping-by-Sequencing (GBS) Illumina reads
+# GBSprep: a pipeline for pre-processing Genotyping-by-Sequencing (GBS) Illumina reads
 
 ## Tool for preprocessing Illumina reads generated from GBS library protocol
 
@@ -40,6 +40,8 @@ Let's assume you want to clone this repo into a directory named `proj`, you will
 ## Run the binary code
 
 The binary code was created from the `GBSprep_main.py` script in the `source` folder using [PyInstaller] (http://www.pyinstaller.org/) v3.0 program on Ubuntu 14.04.4 Trusty.
+
+The binary code is located in the `binary` folder
 
 ###Prepare the environment
 
@@ -145,7 +147,7 @@ The option of the script and the preparation of the environment will be exactly 
 
 ## Barcode file specifications
 
-The barcode files if formed by two columns, separated by a space, with the barcode sequence and the name of the genotypes
+The barcode files if formed by two columns, separated by a space, with the barcode sequence and the name of the genotype
 
 	barcode1 genotype1
 	barcode2 genotype2
