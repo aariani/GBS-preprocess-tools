@@ -137,7 +137,7 @@ minQ=args.minQ
 gz=args.gz
 contaminant=args.contaminant
 rmRErem=args.rmRErem
-unMatch=argc.unMatch
+unMatch=args.unMatch
 ### Get barcode info and open all the file
 barcode_d,l,demInfo=getBCInfo(bc, gz)
 
