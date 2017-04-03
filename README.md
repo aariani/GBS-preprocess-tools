@@ -120,11 +120,11 @@ For all the option of the code from the command line type:
 
 See the [barcode section] (#barcode-file-specifications) for the format of the barcode file
 
-If the binary code is not working on your system you can compile a personal binary code in you PC using [PyInstaller] (http://www.pyinstaller.org/) and the `GBS_preprocess_tool.py` script. 
+If the binary code is not working on your system you can compile a personal binary code in you PC using [PyInstaller](http://www.pyinstaller.org/) and the `GBS_preprocess_tool.py` script. 
 
-Please refer to the [PyInstall Manual] (http://pythonhosted.org/PyInstaller/) for further informations.
+Please refer to the [PyInstall Manual](http://pythonhosted.org/PyInstaller/) for further informations.
 
-Another option could be to [run the source code] (#run-the-source-code)
+Another option could be to [run the source code](#run-the-source-code)
 
 ==================================================================================
 
