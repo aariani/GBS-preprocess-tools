@@ -43,7 +43,7 @@ The binary code was created from the `GBSprep_main.py` script in the `source` fo
 
 The binary code is located in the `binary` folder
 
-###Prepare the environment
+### Prepare the environment
 
 1. Create a directory for you project
 
