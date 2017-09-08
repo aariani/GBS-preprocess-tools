@@ -1,10 +1,10 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 from __future__ import print_function
 import gzip
-import os
+import glob
 import argparse
-from commands import getoutput
+from subprocess import call
 
 #################################################################
 def getBCInfo(bcfile,gz):
@@ -142,7 +142,7 @@ unMatch=args.unMatch
 barcode_d,l,demInfo=getBCInfo(bc, gz)
 
 ### Start preprocess the files
-all_reads=getoutput('ls %s/*.gz' % reads).split()
+all_reads=glob.glob('ls %s/*.gz' % reads)
 for i in all_reads:
 	print('Start preprocessing %s file' % i)
 	read_f=gzip.open(i, 'rb')
@@ -153,7 +153,7 @@ for i in all_reads:
 		plus=read_f.readline()
 		quality=read_f.readline()
 		if '1:Y:0' not in name:  ## keep only reads passing initial Illumina filtering
-			index,sequence,quality=getBCindex(name,sequence,quality,barcode_d,l)			
+			index,sequence,quality=getBCindex(name,sequence,quality,barcode_d,l)
 			if index:
 				sequence, quality= process(sequence, quality, REsite, contaminant, minQ, minlen, rem_site, rmRErem)
 				if sequence:
@@ -168,8 +168,8 @@ for i in all_reads:
 					demInfo[barcode_d[index]]+=1
 	read_f.close()
 
-os.system('mkdir %s' % clean_reads)
-os.system('mv *fq* %s' % clean_reads)
+call('mkdir %s' % clean_reads, shell=True)
+call('mv *fq* %s' % clean_reads, shell=True)
 
 print('Sample\tTotalReads', file=open('Demultiplexing_stats.txt', 'a'))
 for i in demInfo.keys():
