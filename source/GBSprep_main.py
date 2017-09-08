@@ -9,7 +9,7 @@ import os
 import argparse
 import BCtool
 import process_read
-from commands import getoutput
+import glob
 
 parser=argparse.ArgumentParser(prog='GBSprep', description='Program for preprocessing GBS reads')
 parser.add_argument('-i', '--input-folder', dest='reads', help='The folder with your raw reads in gz compressed format (REQUIRED)')
@@ -27,7 +27,7 @@ args=parser.parse_args()
 
 ## Check if there is some parameter missing
 if 'None' in str(args):
-	parser.error('Input parameter missing!! Please check your command line parameters with -h or --help')
+    parser.error('Input parameter missing!! Please check your command line parameters with -h or --help')
 
 ## Assigning paramters to variables
 reads=args.reads.split('/')[0]
@@ -45,35 +45,35 @@ rmRErem=args.rmRErem
 barcode_d,l,demInfo=BCtool.getBCInfo(bc, gz)
 
 ### Start preprocess the files
-all_reads=getoutput('ls %s/*.gz' % reads).split()
+all_reads=glob.glob('ls %s/*.gz' % reads)
 for i in all_reads:
-	print('Start preprocessing %s file' % i)
-	read_f=gzip.open(i, 'rb')
-	while True:
-		name=read_f.readline()
-		if name=='': break  ## stop parsing the file at the end
-		sequence=read_f.readline()
-		plus=read_f.readline()
-		quality=read_f.readline()
-		if '1:Y:0' not in name:  ## keep only reads passing initial Illumina filtering
-			index,sequence,quality=BCtool.getBCindex(name,sequence,quality,barcode_d,l)			
-			if index:
-				sequence, quality= process_read.process(sequence, quality, REsite, contaminant, minQ, minlen, rem_site, rmRErem)
-				if sequence:
-					if gz:
-						a=gzip.open(barcode_d[index], 'ab')
-						a.write(name+sequence+plus+quality)
-						a.close()
-					else:
-						a=open(barcode_d[index], 'a')
-						a.write(name+sequence+plus+quality)
-						a.close()
-					demInfo[barcode_d[index]]+=1
-	read_f.close()
+    print('Start preprocessing %s file' % i)
+    read_f=gzip.open(i, 'rb')
+    while True:
+        name=read_f.readline()
+        if name=='': break  ## stop parsing the file at the end
+        sequence=read_f.readline()
+        plus=read_f.readline()
+        quality=read_f.readline()
+        if '1:Y:0' not in name:  ## keep only reads passing initial Illumina filtering
+            index,sequence,quality=BCtool.getBCindex(name,sequence,quality,barcode_d,l)
+            if index:
+                sequence, quality= process_read.process(sequence, quality, REsite, contaminant, minQ, minlen, rem_site, rmRErem)
+                if sequence:
+                    if gz:
+                        a=gzip.open(barcode_d[index], 'ab')
+                        a.write(name+sequence+plus+quality)
+                        a.close()
+                    else:
+                        a=open(barcode_d[index], 'a')
+                        a.write(name+sequence+plus+quality)
+                        a.close()
+                    demInfo[barcode_d[index]]+=1
+    read_f.close()
 
 os.system('mkdir %s' % clean_reads)
 os.system('mv *fq* %s' % clean_reads)
 
 print('Sample\tTotalReads', file=open('Demultiplexing_stats.txt', 'a'))
 for i in demInfo.keys():
-	print(i.split('.')[0], demInfo[i], sep='\t', file=open('Demultiplexing_stats.txt', 'a'))
+    print(i.split('.')[0], demInfo[i], sep='\t', file=open('Demultiplexing_stats.txt', 'a'))
