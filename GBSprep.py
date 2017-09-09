@@ -142,7 +142,7 @@ unMatch=args.unMatch
 barcode_d,l,demInfo=getBCInfo(bc, gz)
 
 ### Start preprocess the files
-all_reads=glob.glob('ls %s/*.gz' % reads)
+all_reads=glob.glob('%s/*.gz' % reads)
 for i in all_reads:
     print('Start preprocessing %s file' % i)
     read_f=gzip.open(i, 'rb')
@@ -171,6 +171,7 @@ for i in all_reads:
 call('mkdir %s' % clean_reads, shell=True)
 call('mv *fq* %s' % clean_reads, shell=True)
 
-print('Sample\tTotalReads', file=open('Demultiplexing_stats.txt', 'a'))
+print('Sample\tTotalReads', file=open('Demultiplexing_stats_%s.txt' % clean_reads, 'a'))
 for i in demInfo.keys():
-    print(i.split('.')[0], demInfo[i], sep='\t', file=open('Demultiplexing_stats.txt', 'a'))
+    print(i.split('.')[0], demInfo[i], sep='\t',
+          file=open('Demultiplexing_stats_%s.txt' % clean_reads, 'a'))
