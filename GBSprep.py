@@ -31,11 +31,7 @@ def getBCindex(name,sequence,quality,barcode_d,l):
     index=[i for i in barcode_d.keys() if i == frag[:len(i)]]
     if len(index)==0:
 ### Write non demultiplexed reads
-        if unMatch:
-            a=gzip.open('unmatched.fq.gz', 'ab')
-            a.write(name+sequence+'+\n'+quality)
-            a.close()
-            return False,False,False  ## index is not defined previously, so it will be just none, without any name associated
+        return False,False,False  ## index is not defined previously, so it will be just none, without any name associated
     else:
         index=index[0]
         sequence=sequence[len(index):]
@@ -119,7 +115,6 @@ parser.add_argument('-q', '--min-qual', dest='minQ',type=int, default=20, help='
 parser.add_argument('-gz', '--binary-output', dest='gz', action='store_true', default=False, help='Do you want to output the fastq file in a compressed format (i.e. gz compressed)? This option save disk space, but writing binary files requires a considerable higher amount of time (Default: False)')
 parser.add_argument('-ad', '--adapter-contaminants', dest='contaminant', default='AGATCGG', help='The initial sequence of the adapter contaminant (default: AGATCGG)')
 parser.add_argument('--remove-remnant-site', dest='rmRErem', action='store_true', default=False, help='Do you want to remove the RE remnant site from the final cleaned reads? (default: False)')
-parser.add_argument('--print-unmatched', dest='unMatch', action='store_true', default=False, help='Do you want to print unmatched reads? (default: False)')
 args=parser.parse_args()
 
 ## Check if there is some parameter missing
@@ -137,7 +132,6 @@ minQ=args.minQ
 gz=args.gz
 contaminant=args.contaminant
 rmRErem=args.rmRErem
-unMatch=args.unMatch
 ### Get barcode info and open all the file
 barcode_d,l,demInfo=getBCInfo(bc, gz)
 
@@ -145,7 +139,7 @@ barcode_d,l,demInfo=getBCInfo(bc, gz)
 all_reads=glob.glob('%s/*.gz' % reads)
 for i in all_reads:
     print('Start preprocessing %s file' % i)
-    read_f=gzip.open(i, 'rb')
+    read_f=gzip.open(i, 'rt')
     while True:
         name=read_f.readline()
         if name=='': break  ## stop parsing the file at the end
