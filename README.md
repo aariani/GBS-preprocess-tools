@@ -37,11 +37,13 @@ Let's assume you want to clone this repo into a directory named `proj`, you will
 
 ==================================================================================
 
-## Run the binary code
+## Run the source code
 
-The binary code was created from the `GBSprep_main.py` script in the `source` folder using [PyInstaller](http://www.pyinstaller.org/) v3.0 program on Ubuntu 14.04.4 Trusty.
+If you are using Windows or MAC (and the binary code is not working) please refer to the `GBSprep.py` script for running this program.
 
-The binary code is located in the `binary` folder
+On Windows you will probably need to install [Cygwin](https://www.cygwin.com/) (not tested!).
+
+The `GBSprep.py` script contains all the codes in the `source` folder in a single file.
 
 ### Prepare the environment
 
@@ -51,7 +53,7 @@ The binary code is located in the `binary` folder
 
 2. Copy the `GBSprep` script to you project directory. If you have saved the script in the `proj/GBSprep` folder type:
 
-		cp proj/GBSprep/GBSprep myGBSproject
+		cp proj/GBSprep/GBSprep.py myGBSproject
 
 3. Create a raw reads folder and copy your FASTQ files there (**Important**: this script works only with gz formatted fastq files)
  
@@ -62,7 +64,7 @@ The binary code is located in the `binary` folder
 Run the script inside the `myGBSproject` folder (Example with CviAII enzyme)
 
 	cd myGBSproject
-	./GBSprep -i fastq -o demultiplexed -bc myBarcodefile.txt -s CATG -SR ATG
+	python GBSprep.py -i fastq -o demultiplexed -bc myBarcodefile.txt -s CATG -SR ATG
 
 The script will output the demultiplexed cleaned reads in fq format ready for downstream analysis.
 
@@ -70,7 +72,7 @@ In addition the script will output a `Demultiplexing_stats.txt` file with inform
 
 For all the option of the code from the command line type:
 
-	./GBSprep -h
+	python GBSprep.py -h
 	usage: GBSprep [-h] [-i READS] [-o CLEAN_READS] [-bc BC_FILE] [-s RESITES]
                [-SR REREM] [-l MINLEN] [-q MINQ] [-gz] [-ad CONTAMINANT]
                [--remove-remnant-site]
@@ -119,29 +121,6 @@ For all the option of the code from the command line type:
 
 
 See the [barcode section] (#barcode-file-specifications) for the format of the barcode file
-
-If the binary code is not working on your system you can compile a personal binary code in you PC using [PyInstaller](http://www.pyinstaller.org/) and the `GBS_preprocess_tool.py` script. 
-
-Please refer to the [PyInstall Manual](http://pythonhosted.org/PyInstaller/) for further informations.
-
-Another option could be to [run the source code](#run-the-source-code)
-
-==================================================================================
-
-## Run the source code
-
-If you are using Windows or MAC (and the binary code is not working) please refer to the `GBSprep.py` script for running this program.
-
-On Windows you will probably need to install [Cygwin](https://www.cygwin.com/) (not tested!).
-
-The `GBSprep.py` script contains all the codes in the `source` folder in a single file.
-
-From the command line type:
-
-	python GBSprep.py -h
-
-
-The option of the script and the preparation of the environment will be exactly the same as in the [run the binary code](#run-the-binary-code) section
 
 ==================================================================================
 

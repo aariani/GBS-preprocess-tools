@@ -7,25 +7,21 @@ import argparse
 from subprocess import call
 
 #################################################################
-def getBCInfo(bcfile,gz):
-### Get barcodes infos, open files accordingly to the Genotypes available in the barcode (and the gz option)
+def getBCInfo(bcfile):
+### Get barcodes infos, open files accordingly to the Genotypes available in the barcode
 ### Return a barcode dictionary and the longer barcode (useful for further demultiplexing), and a dictionary used for demultiplexing stats
     barcode_d={}
     for line in open(bcfile):
         line=line.strip().split()
-        if gz:
-            barcode_d[line[0]]=line[1]+'.fq.gz'
-            gzip.open(line[1]+'.fq.gz', 'wb')
-        else:
-            barcode_d[line[0]]=line[1]+'.fq'
-            open(line[1]+'.fq', 'w')
+        barcode_d[line[0]]=line[1]+'.fq'
+        open(line[1]+'.fq', 'w')
     l=max([len(i) for i in barcode_d.keys()])
     demInfo={k:0 for k in barcode_d.values()}
     return barcode_d, l, demInfo
 
 ###############################################################
 def getBCindex(name,sequence,quality,barcode_d,l):
-### Script for getting the barcode file index for the sequence. If not not found write the reads to the unmatched.fa.gz file.
+### Script for getting the barcode file index for the sequence.
 ### If find the barcode return the sequence and quality without the barcode sequence
     frag=sequence[:l] ## Extract the initial part of the sequence
     index=[i for i in barcode_d.keys() if i == frag[:len(i)]]
@@ -112,7 +108,6 @@ parser.add_argument('-s', '--restriction_enzyme_site', dest='REsites', help='The
 parser.add_argument('-SR', '--site-remnant', dest='RErem', help='The RE remnant site after the digestion (REQUIRED). Only reads with the remnant site after the barcode will be kept. For RE with ambiguous nucleotide you should write all the possible remnant sites separated by a comma (as in the -s parameter)')
 parser.add_argument('-l', '--min-length', dest='minlen', type=int, default=30, help='Minimum length of reads after quality trimming and adapter/chimeras clipping (default: 30bp)')
 parser.add_argument('-q', '--min-qual', dest='minQ',type=int, default=20, help='Mean minimum quality (in a sliding window of 5bp) for trimming reads, assumed Sanger quality (Illumina 1.8+, default: 20)')
-parser.add_argument('-gz', '--binary-output', dest='gz', action='store_true', default=False, help='Do you want to output the fastq file in a compressed format (i.e. gz compressed)? This option save disk space, but writing binary files requires a considerable higher amount of time (Default: False)')
 parser.add_argument('-ad', '--adapter-contaminants', dest='contaminant', default='AGATCGG', help='The initial sequence of the adapter contaminant (default: AGATCGG)')
 parser.add_argument('--remove-remnant-site', dest='rmRErem', action='store_true', default=False, help='Do you want to remove the RE remnant site from the final cleaned reads? (default: False)')
 args=parser.parse_args()
@@ -129,11 +124,10 @@ REsite=args.REsites.split(',')  ## This will be a list
 rem_site=args.RErem.split(',') ## And this too. Remember for the final filtering
 minlen=args.minlen
 minQ=args.minQ
-gz=args.gz
 contaminant=args.contaminant
 rmRErem=args.rmRErem
 ### Get barcode info and open all the file
-barcode_d,l,demInfo=getBCInfo(bc, gz)
+barcode_d,l,demInfo=getBCInfo(bc)
 
 ### Start preprocess the files
 all_reads=glob.glob('%s/*.gz' % reads)
@@ -151,15 +145,10 @@ for i in all_reads:
             if index:
                 sequence, quality= process(sequence, quality, REsite, contaminant, minQ, minlen, rem_site, rmRErem)
                 if sequence:
-                    if gz:
-                        a=gzip.open(barcode_d[index], 'ab')
-                        a.write(name+sequence+plus+quality)
-                        a.close()
-                    else:
-                        a=open(barcode_d[index], 'a')
-                        a.write(name+sequence+plus+quality)
-                        a.close()
-                        demInfo[barcode_d[index]]+=1
+                    a=open(barcode_d[index], 'a')
+                    a.write(name+sequence+plus+quality)
+                    a.close()
+                    demInfo[barcode_d[index]]+=1
     read_f.close()
 
 call('mkdir %s' % clean_reads, shell=True)
